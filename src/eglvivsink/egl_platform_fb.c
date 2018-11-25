@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <poll.h>
 #include <errno.h>
+#include <vdk.h>
 #include "egl_platform.h"
 #include "egl_misc.h"
 #include "gl_headers.h"
@@ -14,6 +15,7 @@ GST_DEBUG_CATEGORY_STATIC(imx_egl_platform_fb_debug);
 
 struct _GstImxEglVivSinkEGLPlatform
 {
+	vdkPrivate vdk;
 	EGLNativeDisplayType native_display;
 	EGLNativeWindowType native_window;
 	EGLDisplay egl_display;
@@ -60,11 +62,19 @@ GstImxEglVivSinkEGLPlatform* gst_imx_egl_viv_sink_egl_platform_create(gchar cons
 		goto cleanup;
 	}
 
+	// initialize vdk
+	platform->vdk = vdkInitialize();
+	if(platform->vdk == 0)
+	{
+		GST_ERROR("vdkInitialize failed");
+		goto cleanup;
+	}
+
 	if (native_display_name == NULL)
 		display_index = 0;
 	else
 		display_index = g_ascii_strtoll(native_display_name, NULL, 10);
-	platform->native_display = fbGetDisplayByIndex(display_index);
+	platform->native_display = vdkGetDisplayByIndex(platform->vdk, display_index);
 
 	platform->egl_display = eglGetDisplay(platform->native_display);
 	if (platform->egl_display == EGL_NO_DISPLAY)
@@ -101,6 +111,9 @@ void gst_imx_egl_viv_sink_egl_platform_destroy(GstImxEglVivSinkEGLPlatform *plat
 {
 	if (platform == NULL)
 		return;
+
+	if(platform->vdk != 0)
+		vdkExit(platform->vdk);
 
 	if (platform->egl_display != EGL_NO_DISPLAY)
 		eglTerminate(platform->egl_display);
@@ -143,10 +156,10 @@ gboolean gst_imx_egl_viv_sink_egl_platform_init_window(GstImxEglVivSinkEGLPlatfo
 		return FALSE;
 	}
 
-	platform->native_window = fbCreateWindow(platform->native_display, x_coord, y_coord, width, height);
+	platform->native_window = vdkCreateWindow(platform->native_display, x_coord, y_coord, width, height);
 
-	fbGetWindowGeometry(platform->native_window, &actual_x, &actual_y, &actual_width, &actual_height);
-	GST_LOG("fbGetWindowGeometry: x/y %d/%d width/height %d/%d", actual_x, actual_y, actual_width, actual_height);
+	vdkGetWindowInfo(platform->native_window, &actual_x, &actual_y, &actual_width, &actual_height, 0, 0);
+	GST_LOG("vdkGetWindowInfo: x/y %d/%d width/height %d/%d", actual_x, actual_y, actual_width, actual_height);
 
 	eglBindAPI(EGL_OPENGL_ES_API);
 
@@ -183,7 +196,7 @@ gboolean gst_imx_egl_viv_sink_egl_platform_shutdown_window(GstImxEglVivSinkEGLPl
 	platform->egl_display = EGL_NO_DISPLAY;
 	platform->egl_context = EGL_NO_CONTEXT;
 	platform->egl_surface = EGL_NO_SURFACE;
-	fbDestroyWindow(platform->native_window);
+	vdkDestroyWindow(platform->native_window);
 	platform->native_window = 0;
 
 	return TRUE;
