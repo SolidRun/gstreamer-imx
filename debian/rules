@@ -1,0 +1,91 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# get architecture information
+include /usr/share/dpkg/architecture.mk
+
+DESTDIR=$(CURDIR)/debian/gstreamer1.0-imx
+KHDRDIR=/usr/include/imx-kernel-api
+SARGS=--prefix=/usr --libdir=/usr/lib/$(DEB_HOST_MULTIARCH) --plugin-install-path=/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0 --kernel-headers=$(KHDRDIR)
+
+# disable mp3 encoder because dl.so can't handle the binary blob
+ifeq ($(DEB_HOST_ARCH),armhf)
+	SARGS += --disable-mp3encoder
+endif
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	rm -rf build-*
+	rm -rf .waf*
+	rm -rf .lock*
+
+override_dh_auto_install:
+
+	# Framebuffer
+	CFLAGS="-g" LDFLAGS="-L/usr/lib/galcore/fb -L/usr/lib/galcore" ./waf configure $(SARGS) --egl-platform=fb -o build-fb
+	./waf build -o build-fb
+	./waf install -o build-fb --destdir=$(DESTDIR)-fb
+	cat build-fb/config.log
+
+	# Wayland
+	CFLAGS="-g" LDFLAGS="-L/usr/lib/galcore/wl -L/usr/lib/galcore" ./waf configure $(SARGS) --egl-platform=wayland -o build-wl
+	./waf build -o build-wl
+	./waf install -o build-wl --destdir=$(DESTDIR)-wl
+	cat build-wl/config.log
+
+	# X11
+	CFLAGS="-g" LDFLAGS="-L/usr/lib/galcore/x11 -L/usr/lib/galcore" ./waf configure $(SARGS) --egl-platform=x11 -o build-x11
+	./waf build -o build-x11
+	./waf install -o build-x11 --destdir=$(DESTDIR)-x11
+	cat build-x11/config.log
+
+	# pick up development files
+	mkdir -p $(DESTDIR)-dev/usr/include
+	mkdir -p $(DESTDIR)-dev/usr/lib/arm-linux-gnueabihf/pkgconfig
+	cp -r $(DESTDIR)-fb/usr/include/gstreamer-1.0 $(DESTDIR)-dev/usr/include/
+	cp -v $(DESTDIR)-fb/usr/lib/arm-linux-gnueabihf/pkgconfig/*.pc $(DESTDIR)-dev/usr/lib/arm-linux-gnueabihf/pkgconfig/
+	cp -sv $(DESTDIR)-fb/usr/lib/arm-linux-gnueabihf/*.so $(DESTDIR)-dev/usr/lib/arm-linux-gnueabihf/
+
+	# now clean up devel files from all backends
+	rm -r $(DESTDIR)-fb/usr/include
+	rm -r $(DESTDIR)-fb/usr/lib/arm-linux-gnueabihf/pkgconfig
+	rm $(DESTDIR)-fb/usr/lib/arm-linux-gnueabihf/*.so
+	rm -r $(DESTDIR)-wl/usr/include
+	rm -r $(DESTDIR)-wl/usr/lib/arm-linux-gnueabihf/pkgconfig
+	rm $(DESTDIR)-wl/usr/lib/arm-linux-gnueabihf/*.so
+	rm -r $(DESTDIR)-x11/usr/include
+	rm -r $(DESTDIR)-x11/usr/lib/arm-linux-gnueabihf/pkgconfig
+	rm $(DESTDIR)-x11/usr/lib/arm-linux-gnueabihf/*.so
+
+	# move into alternatives subfolders
+	mkdir -p $(DESTDIR)-fb/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-fb/gstreamer-1.0
+	mv $(DESTDIR)-fb/usr/lib/$(DEB_HOST_MULTIARCH)/*.so* $(DESTDIR)-fb/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-fb/
+	mv $(DESTDIR)-fb/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0/*.so* $(DESTDIR)-fb/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-fb/gstreamer-1.0/
+
+	mkdir -p $(DESTDIR)-wl/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-wl/gstreamer-1.0
+	mv $(DESTDIR)-wl/usr/lib/$(DEB_HOST_MULTIARCH)/*.so* $(DESTDIR)-wl/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-wl/
+	mv $(DESTDIR)-wl/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0/*.so* $(DESTDIR)-wl/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-wl/gstreamer-1.0/
+
+	mkdir -p $(DESTDIR)-x11/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-x11/gstreamer-1.0
+	mv $(DESTDIR)-x11/usr/lib/$(DEB_HOST_MULTIARCH)/*.so* $(DESTDIR)-x11/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-x11/
+	mv $(DESTDIR)-x11/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0/*.so* $(DESTDIR)-x11/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-x11/gstreamer-1.0/
+
+override_dh_shlibdeps:
+	dh_shlibdeps -pgstreamer1.0-imx-fb -l/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-fb -- --ignore-missing-info -ximx-gpu-viv-fb -ximx-gpu-viv-dfb -ximx-gpu-viv-x11 -ximx-gpu-viv-wl
+	dh_shlibdeps -pgstreamer1.0-imx-wl -l/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-wl -- --ignore-missing-info -ximx-gpu-viv-fb -ximx-gpu-viv-dfb -ximx-gpu-viv-x11 -ximx-gpu-viv-wl
+	dh_shlibdeps -pgstreamer1.0-imx-x11 -l/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer1.0-imx-x11 -- --ignore-missing-info -ximx-gpu-viv-fb -ximx-gpu-viv-dfb -ximx-gpu-viv-x11 -ximx-gpu-viv-wl
+
+override_dh_strip:
+	dh_strip --package=gstreamer1.0-imx-fb --dbg-package=gstreamer1.0-imx-fb-dbg
+	dh_strip --package=gstreamer1.0-imx-wl --dbg-package=gstreamer1.0-imx-wl-dbg
+	dh_strip --package=gstreamer1.0-imx-x11 --dbg-package=gstreamer1.0-imx-x11-dbg

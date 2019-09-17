@@ -1,0 +1,115 @@
+Source: gstreamer1.0-imx
+Priority: extra
+Maintainer: Josua Mayer <josua@solid-run.com>
+Build-Depends: debhelper (>= 9),
+ python (<< 3),
+ pkg-config,
+ libgstreamer1.0-dev (>= 1.2.0),
+ libgstreamer-plugins-base1.0-dev (>= 1.2.0),
+ libgstreamer-plugins-bad1.0-dev,
+ imx-gpu-viv-fb-dev,
+ imx-gpu-viv-wl-dev,
+ imx-gpu-viv-x11-dev,
+ libx11-dev,
+ imx-kernel-api,
+ libfslcodec-dev,
+ libg2d-dev,
+ libimxvpuapi-dev (>= 0.10.3),
+ libwayland-dev,
+ libcairo2-dev (>= 1.14.0),
+ libpango1.0-dev (>= 1.40.0),
+ libxdamage-dev,
+Standards-Version: 3.9.6
+Section: libs
+
+Package: gstreamer1.0-imx
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ dpkg (>= 1.15.4),
+ gstreamer1.0-imx-fb (= ${binary:Version}) | gstreamer1.0-imx-wl (= ${binary:Version}) | gstreamer1.0-imx-x11 (= ${binary:Version}),
+Description: GStreamer plugins for Freescale i.MX series of SoCs
+ Provides gstreamer plugins which can utilize the hardware accelerators for audio
+ and video that are present in Freescale`s i.MX series of SoCs.
+
+Package: gstreamer1.0-imx-dev
+Section: libdevel
+Architecture: any
+Depends:
+ ${misc:Depends},
+ gstreamer1.0-imx (= ${binary:Version}),
+Description: Development files for gstreamer-imx
+ Provides libraries and headers to create applications using the gstreamer
+ plugins for i.MX* SoCs.
+
+Package: gstreamer1.0-imx-fb
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ gstreamer1.0-imx (= ${binary:Version}),
+ imx-gpu-viv-fb,
+Description: GStreamer plugins for Freescale i.MX series of SoCs (for Framebuffer)
+ Provides gstreamer plugins which can utilize the hardware accelerators for audio
+ and video that are present in Freescale`s i.MX series of SoCs.
+
+Package: gstreamer1.0-imx-wl
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ gstreamer1.0-imx (= ${binary:Version}),
+ imx-gpu-viv-wl,
+Description: GStreamer plugins for Freescale i.MX series of SoCs (for Wayland)
+ Provides gstreamer plugins which can utilize the hardware accelerators for audio
+ and video that are present in Freescale`s i.MX series of SoCs.
+
+Package: gstreamer1.0-imx-x11
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ gstreamer1.0-imx (= ${binary:Version}),
+ imx-gpu-viv-x11,
+Description: GStreamer plugins for Freescale i.MX series of SoCs (for X11)
+ Provides gstreamer plugins which can utilize the hardware accelerators for audio
+ and video that are present in Freescale`s i.MX series of SoCs.
+
+Package: gstreamer1.0-imx-fb-dbg
+Architecture: any
+Section: debug
+Depends:
+ ${misc:Depends},
+ gstreamer1.0-imx-fb (= ${binary:Version}),
+Description: Debug Symbols for gstreamer1.0-imx (for Framebuffer)
+ Provides the debug symbols to the GStreamer plugins for Freescale i.MX series of
+ SoCs.
+
+Package: gstreamer1.0-imx-wl-dbg
+Architecture: any
+Section: debug
+Depends:
+ ${misc:Depends},
+ gstreamer1.0-imx-wl (= ${binary:Version}),
+Description: Debug Symbols for gstreamer1.0-imx (for Wayland)
+ Provides the debug symbols to the GStreamer plugins for Freescale i.MX series of
+ SoCs.
+
+Package: gstreamer1.0-imx-x11-dbg
+Architecture: any
+Section: debug
+Depends:
+ ${misc:Depends},
+ gstreamer1.0-imx-x11 (= ${binary:Version}),
+Description: Debug Symbols for gstreamer1.0-imx (for X11)
+ Provides the debug symbols to the GStreamer plugins for Freescale i.MX series of
+ SoCs.

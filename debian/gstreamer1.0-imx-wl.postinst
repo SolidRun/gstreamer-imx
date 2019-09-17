@@ -1,0 +1,40 @@
+#!/bin/sh -e
+
+# detect multiarch name
+case $DPKG_MAINTSCRIPT_ARCH in
+	armhf)
+		DEB_HOST_MULTIARCH=arm-linux-gnueabihf
+		;;
+	armel)
+		DEB_HOST_MULTIARCH=arm-linux-gnueabi
+		;;
+	*)
+		exit 1
+esac
+
+# version
+MAJOR=0
+MINOR=13.0
+
+# handle alternatives
+if [ "x$1" = "xconfigure" ]; then
+	update-alternatives \
+		--install /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx gst1.0-imx /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl 30 \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/libgstimxcommon.so.$MAJOR.$MINOR gst-imx-libgstimxcommon-so-x-y /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/libgstimxcommon.so.$MAJOR.$MINOR \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/libgstimxcommon.so.$MAJOR gst-imx-libgstimxcommon-so-x /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/libgstimxcommon.so.$MAJOR \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/libgstimxcompositor.so.$MAJOR.$MINOR gst-imx-libgstimxcompositor-so-x-y /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/libgstimxcompositor.so.$MAJOR.$MINOR \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/libgstimxcompositor.so.$MAJOR gst-imx-libgstimxcompositor-so-x /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/libgstimxcompositor.so.$MAJOR \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/libgstimxblitter.so.$MAJOR.$MINOR gst-imx-libgstimxblitter-so-x-y /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/libgstimxblitter.so.$MAJOR.$MINOR \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/libgstimxblitter.so.$MAJOR gst-imx-libgstimxblitter-so-x /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/libgstimxblitter.so.$MAJOR \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxeglvivsink.so gst-imx-plugin-eglvivsink /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxeglvivsink.so \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxipu.so gst-imx-plugin-ipu /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxipu.so \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxvpu.so gst-imx-plugin-vpu /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxvpu.so \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxv4l2video.so gst-imx-plugin-v4l2videosrc /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxv4l2video.so \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxaudio.so gst-imx-plugin-audio /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxaudio.so \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxpxp.so gst-imx-plugin-pxp /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxpxp.so \
+		--slave /usr/lib/$DEB_HOST_MULTIARCH/gstreamer-1.0/libgstimxg2d.so gst-imx-plugin-g2d /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-wl/gstreamer-1.0/libgstimxg2d.so
+fi
+
+#DEBHELPER#
+
+exit 0

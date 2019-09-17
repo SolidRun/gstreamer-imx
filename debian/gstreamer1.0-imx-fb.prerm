@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+# detect multiarch name
+case $DPKG_MAINTSCRIPT_ARCH in
+	armhf)
+		DEB_HOST_MULTIARCH=arm-linux-gnueabihf
+		;;
+	armel)
+		DEB_HOST_MULTIARCH=arm-linux-gnueabi
+		;;
+	*)
+		exit 1
+esac
+
+# remove alternative
+if [ "x$1" = "xremove" ]; then
+	update-alternatives --remove gst1.0-imx /usr/lib/$DEB_HOST_MULTIARCH/gstreamer1.0-imx-fb
+fi
+
+#DEBHELPER#
+
+exit 0
