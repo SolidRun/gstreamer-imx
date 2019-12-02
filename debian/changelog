@@ -1,0 +1,94 @@
+gstreamer1.0-imx (2.0.0) stable; urgency=medium
+
+  * switch to v2 branch for i.MX8 support
+
+ -- Josua Mayer <josua@solid-run.com>  Sun, 01 Dec 2019 20:32:22 +0000
+
+gstreamer1.0-imx (0.13.0+3) stable; urgency=medium
+
+  * disable mp3 encoder for armhf
+
+ -- Josua Mayer <josua@solid-run.com>  Tue, 17 Sep 2019 14:29:59 +0000
+
+gstreamer1.0-imx (0.13.0+2) stable; urgency=medium
+
+  * fixed minor build-time issue
+  * create -dev package
+
+ -- Josua Mayer <josua@solid-run.com>  Fri, 21 Sep 2018 13:22:15 +0200
+
+gstreamer1.0-imx (0.13.0+1) stable; urgency=medium
+
+  * removed problem with alternatives
+
+ -- Josua Mayer <josua@solid-run.com>  Sat, 15 Sep 2018 18:56:26 +0200
+
+gstreamer1.0-imx (0.13.0) stable; urgency=medium
+
+  * update
+
+ -- Josua Mayer <josua@solid-run.com>  Fri, 14 Sep 2018 22:47:14 +0200
+
+gstreamer1.0-imx (0.12.3) stable; urgency=medium
+
+  * Non-maintainer upload.
+  * update to latest release
+
+ -- Josua Mayer <josua@solid-run.com>  Fri, 09 Dec 2016 13:02:05 +0100
+
+gstreamer1.0-imx (0.12.2+15+gc537ce9) stable; urgency=medium
+
+  * Non-maintainer upload.
+  * update to current git as 0.12.2 does not build 
+  * version string generated using `git describe --tags`
+
+ -- Josua Mayer <josua@solid-run.com>  Thu, 06 Oct 2016 13:24:41 +0000
+
+gstreamer1.0-imx (0.12.0) stable; urgency=medium
+
+  * update
+  * libfslvpuwrap replaced by libimxvpuapi
+
+ -- Josua Mayer <josua@solid-run.com>  Sat, 09 Jan 2016 13:49:26 +0000
+
+gstreamer1.0-imx (0.11.1pkg2) stable; urgency=medium
+
+  * update
+
+ -- Josua Mayer <josua@solid-run.com>  Sat, 14 Nov 2015 16:02:01 +0000
+
+gstreamer1.0-imx (0.11.1pkg1) stable; urgency=medium
+
+  * use update-alternatives
+
+ -- Josua Mayer <josua@solid-run.com>  Sun, 06 Sep 2015 14:36:02 +0000
+
+gstreamer1.0-imx (0.11.1) stable; urgency=medium
+
+  * update to 0.11.1
+
+ -- Josua Mayer <josua@solid-run.com>  Thu, 13 Aug 2015 22:09:35 +0800
+
+gstreamer1.0-imx (0.10.2) stable; urgency=medium
+
+  * update to 0.10.2
+
+ -- Josua Mayer <josua@solid-run.com>  Sat, 06 Jun 2015 14:12:24 +0800
+
+gstreamer1.0-imx (0.10.0) stable; urgency=medium
+
+  * build all windowsys-flavors
+
+ -- Josua Mayer <josua@solid-run.com>  Sat, 23 May 2015 12:41:11 +0200
+
+gstreamer1.0-imx (0.10.0) unstable; urgency=low
+
+  * add audio handling
+
+ -- Josua Mayer <josua@solid-run.com>  Wed, 04 Feb 2015 21:56:23 +0100
+
+gstreamer1.0-imx (0.9.9) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Josua Mayer <josua@solid-run.com>  Sun, 09 Nov 2014 11:40:39 +0100

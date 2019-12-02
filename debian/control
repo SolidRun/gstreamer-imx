@@ -1,0 +1,32 @@
+Source: gstreamer1.0-imx
+Priority: extra
+Maintainer: Josua Mayer <josua@solid-run.com>
+Build-Depends: debhelper (>= 9),
+ meson,
+ libg2d-dev,
+ libgstreamer1.0-dev,
+ libgstreamer-plugins-base1.0-dev,
+ libimxdmabuffer-dev,
+ libimxvpuapi2-dev,
+Standards-Version: 3.9.6
+Section: libs
+
+Package: gstreamer1.0-imx
+Section: libs
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: GStreamer plugins for Freescale i.MX series of SoCs
+ Provides gstreamer plugins which can utilize the hardware accelerators for audio
+ and video that are present in Freescale`s i.MX series of SoCs.
+
+Package: gstreamer1.0-imx-dev
+Section: libdevel
+Architecture: any
+Depends:
+ ${misc:Depends},
+ gstreamer1.0-imx (= ${binary:Version}),
+Description: Development files for gstreamer-imx
+ Provides libraries and headers to create applications using the gstreamer
+ plugins for i.MX* SoCs.

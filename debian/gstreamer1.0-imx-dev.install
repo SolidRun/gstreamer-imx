@@ -1,0 +1,3 @@
+usr/lib/*/*.so
+usr/lib/*/pkgconfig/*.pc
+usr/include/gstreamer-1.0/gst/imx/common/*.h
